@@ -1,0 +1,635 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Example entity - replace with your actual entities
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// ========== CMS Models ==========
+
+// Hero Section
+model HeroSection {
+  id            String      @id @default(uuid())
+  isActive      Boolean     @default(true)
+  titleEn       String
+  titleAr       String
+  descriptionEn String      @db.Text
+  descriptionAr String      @db.Text
+  buttonTextEn  String
+  buttonTextAr  String
+  buttonLink    String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  mediaItems    HeroMedia[]
+  stats         HeroStat[]
+
+  @@map("hero_sections")
+}
+
+// Hero Media (videos/images)
+model HeroMedia {
+  id            String      @id @default(uuid())
+  heroSectionId String
+  heroSection   HeroSection @relation(fields: [heroSectionId], references: [id], onDelete: Cascade)
+  type          String // 'video' or 'image'
+  url           String // File path
+  order         Int         @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("hero_media")
+}
+
+// Hero Statistics Cards
+model HeroStat {
+  id            String      @id @default(uuid())
+  heroSectionId String
+  heroSection   HeroSection @relation(fields: [heroSectionId], references: [id], onDelete: Cascade)
+  numberEn      String
+  numberAr      String
+  labelEn       String
+  labelAr       String
+  descriptionEn String
+  descriptionAr String
+  order         Int         @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("hero_stats")
+}
+
+// Categories Section
+model Category {
+  id           String   @id @default(uuid())
+  titleEn      String
+  titleAr      String
+  productCount Int
+  imageUrl     String
+  gridClasses  String // Tailwind grid classes for positioning
+  order        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("categories")
+}
+
+// Solutions Section Settings
+model SolutionsSectionSettings {
+  id             String   @id @default(uuid())
+  sectionTitleEn String   @default("Solutions that fit your needs")
+  sectionTitleAr String   @default("حلول تناسب احتياجاتك")
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("solutions_section_settings")
+}
+
+// Solutions/Services Section
+model Solution {
+  id            String   @id @default(uuid())
+  titleEn       String
+  titleAr       String
+  descriptionEn String?  @db.Text
+  descriptionAr String?  @db.Text
+  imageUrl      String
+  height        String // Tailwind height class
+  tags          Json? // Array of tag objects with {textEn, textAr}
+  extraCount    Int?
+  order         Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("solutions")
+}
+
+// Projects Section Settings
+model ProjectsSectionSettings {
+  id              String    @id @default(uuid())
+  sectionTitleEn  String    @default("Our proud projects")
+  sectionTitleAr  String    @default("مشاريعنا الفخورة")
+  buttonTextEn    String    @default("View project details")
+  buttonTextAr    String    @default("عرض تفاصيل المشروع")
+  ctaButtonTextEn String    @default("View more projects")
+  ctaButtonTextAr String    @default("عرض المزيد من المشاريع")
+  ctaButtonLink   String?
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  projects        Project[]
+
+  @@map("projects_section_settings")
+}
+
+// Projects Section
+model Project {
+  id                String                   @id @default(uuid())
+  projectsSectionId String?
+  projectsSection   ProjectsSectionSettings? @relation(fields: [projectsSectionId], references: [id], onDelete: SetNull)
+  titleEn           String
+  titleAr           String
+  imageUrl          String
+  productsCount     Int
+  buttonTextEn      String?                  @default("View project details")
+  buttonTextAr      String?                  @default("عرض تفاصيل المشروع")
+  buttonLink        String?
+  order             Int                      @default(0)
+  isActive          Boolean                  @default(true)
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  logos             ProjectLogo[]
+
+  @@map("projects")
+}
+
+// Project Logos (logos displayed on top of project cards)
+model ProjectLogo {
+  id        String   @id @default(uuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  imageUrl  String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("project_logos")
+}
+
+// Articles Section Settings
+model ArticlesSectionSettings {
+  id             String   @id @default(uuid())
+  sectionTitleEn String   @default("Learn to make better decisions")
+  sectionTitleAr String   @default("تعلم اتخاذ قرارات أفضل")
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("articles_section_settings")
+}
+
+// Articles Section
+model Article {
+  id        String   @id @default(uuid())
+  titleEn   String
+  titleAr   String
+  imageUrl  String
+  date      DateTime
+  link      String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("articles")
+}
+
+// Brands Section Settings
+model BrandsSectionSettings {
+  id             String      @id @default(uuid())
+  sectionTitleEn String      @default("The best global brands")
+  sectionTitleAr String      @default("أفضل العلامات التجارية العالمية")
+  isActive       Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  logos          BrandLogo[]
+
+  @@map("brands_section_settings")
+}
+
+// Brand Logos
+model BrandLogo {
+  id              String                @id @default(uuid())
+  brandsSectionId String
+  brandsSection   BrandsSectionSettings @relation(fields: [brandsSectionId], references: [id], onDelete: Cascade)
+  nameEn          String // Name for dropdown (English)
+  nameAr          String // Name for dropdown (Arabic)
+  imageUrl        String
+  order           Int                   @default(0)
+  isActive        Boolean               @default(true)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  products        Product[]
+
+  @@map("brand_logos")
+}
+
+// Customer Testimonials
+model Testimonial {
+  id             String               @id @default(uuid())
+  sectionTitleEn String               @default("Customer trust comes first")
+  sectionTitleAr String               @default("ثقة العملاء أولاً")
+  textEn         String               @db.Text
+  textAr         String               @db.Text
+  imageUrl       String
+  order          Int                  @default(0)
+  isActive       Boolean              @default(true)
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  profiles       TestimonialProfile[]
+
+  @@map("testimonials")
+}
+
+// Testimonial Profile Pictures
+model TestimonialProfile {
+  id                  String      @id @default(uuid())
+  testimonialId       String
+  testimonial         Testimonial @relation(fields: [testimonialId], references: [id], onDelete: Cascade)
+  name                String
+  role                String
+  imageUrl            String
+  testimonialTextEn   String?     @db.Text
+  testimonialTextAr   String?     @db.Text
+  testimonialImageUrl String?
+  order               Int         @default(0)
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  @@map("testimonial_profiles")
+}
+
+// Section Order Management
+model SectionOrder {
+  id          String   @id @default(uuid())
+  sectionName String   @unique // 'hero', 'categories', 'solutions', 'brands', 'projects', 'testimonials', 'cta', 'articles'
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("section_orders")
+}
+
+// Start Project Section (CTA Section)
+model StartProjectSection {
+  id                 String   @id @default(uuid())
+  titleEn            String   @default("Start your project with us")
+  titleAr            String   @default("ابدأ مشروعك معنا")
+  descriptionEn      String   @db.Text
+  descriptionAr      String   @db.Text
+  backgroundImageUrl String
+  button1TextEn      String   @default("Talk to an expert")
+  button1TextAr      String   @default("تحدث مع خبير")
+  button1Link        String?
+  button2TextEn      String   @default("Start your order now")
+  button2TextAr      String   @default("ابدأ طلبك الآن")
+  button2Link        String?
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("start_project_sections")
+}
+
+// Theme Settings
+model ThemeSettings {
+  id           String   @id @default(uuid())
+  colorBrand   String   @default("#3daae1")
+  colorAccent  String   @default("#22c55e")
+  fontFamily   String   @default("Inter")
+  fontFamilyAr String   @default("Tajawal")
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("theme_settings")
+}
+
+// Contact Page Settings
+model ContactPageSettings {
+  id             String   @id @default(uuid())
+  heroImageUrl   String
+  titleEn        String   @default("Get in Touch")
+  titleAr        String   @default("تواصل معنا")
+  descriptionEn  String   @db.Text
+  descriptionAr  String   @db.Text
+  phoneNumber    String
+  email          String
+  workingHoursEn String
+  workingHoursAr String
+  locationEn     String
+  locationAr     String
+  bottomImageUrl String?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("contact_page_settings")
+}
+
+// Terms and Conditions Page Settings
+model TermsAndConditionsPageSettings {
+  id            String   @id @default(uuid())
+  heroImageUrl  String
+  titleEn       String   @default("Terms and Conditions")
+  titleAr       String   @default("الشروط والأحكام")
+  descriptionEn String   @db.Text
+  descriptionAr String   @db.Text
+  contentEn     String?  @db.Text // Rich text HTML content
+  contentAr     String?  @db.Text // Rich text HTML content
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("terms_and_conditions_page_settings")
+}
+
+// FAQ Page Settings
+model FAQPageSettings {
+  id                String   @id @default(uuid())
+  titleEn           String   @default("Frequently Asked Questions")
+  titleAr           String   @default("الأسئلة الشائعة")
+  descriptionEn     String   @db.Text
+  descriptionAr     String   @db.Text
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  faqItems          FAQItem[]
+
+  @@map("faq_page_settings")
+}
+
+// FAQ Items
+model FAQItem {
+  id                String          @id @default(uuid())
+  faqPageSettingsId String?
+  faqPageSettings   FAQPageSettings? @relation(fields: [faqPageSettingsId], references: [id], onDelete: Cascade)
+  questionEn        String
+  questionAr        String
+  answerEn          String          @db.Text
+  answerAr          String          @db.Text
+  order             Int             @default(0)
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@map("faq_items")
+}
+
+// Projects Page Settings (Hero Section)
+model ProjectsPageSettings {
+  id                String            @id @default(uuid())
+  heroTitleEn       String            @default("Our Projects We Are Proud Of")
+  heroTitleAr       String            @default("مشاريعنا التي نفتخر بها")
+  heroDescriptionEn String?           @db.Text
+  heroDescriptionAr String?           @db.Text
+  heroImageUrl      String
+  isActive          Boolean           @default(true)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  heroButtons       ProjectHeroButton[]
+
+  @@map("projects_page_settings")
+}
+
+// Project Hero Buttons
+model ProjectHeroButton {
+  id                String            @id @default(uuid())
+  projectsPageSettingsId String?
+  projectsPageSettings   ProjectsPageSettings? @relation(fields: [projectsPageSettingsId], references: [id], onDelete: Cascade)
+  textEn            String
+  textAr            String
+  link              String?
+  order             Int               @default(0)
+  isActive          Boolean           @default(true)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@map("project_hero_buttons")
+}
+
+// Request Types (Lookup table for dropdown)
+model RequestType {
+  id              String           @id @default(uuid())
+  nameEn          String
+  nameAr          String
+  order           Int              @default(0)
+  isActive        Boolean          @default(true)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  contactRequests ContactRequest[]
+
+  @@map("request_types")
+}
+
+// Contact Requests (Form submissions)
+model ContactRequest {
+  id            String       @id @default(uuid())
+  requestTypeId String?
+  requestType   RequestType? @relation(fields: [requestTypeId], references: [id], onDelete: SetNull)
+  name          String
+  email         String
+  phone         String?
+  company       String?
+  message       String       @db.Text
+  status        String       @default("pending") // 'pending', 'read', 'replied', 'archived'
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@map("contact_requests")
+}
+
+// Products Page Settings (Hero Section)
+model ProductsPageSettings {
+  id           String   @id @default(uuid())
+  heroTitleEn  String   @default("Products")
+  heroTitleAr  String   @default("المنتجات")
+  heroImageUrl String
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("products_page_settings")
+}
+
+// Services Page Settings (Hero Section)
+model ServicesPageSettings {
+  id              String   @id @default(uuid())
+  heroTitleEn      String   @default("Services")
+  heroTitleAr      String   @default("الخدمات")
+  heroDescriptionEn String? @db.Text
+  heroDescriptionAr String? @db.Text
+  heroImageUrl     String
+  tickerTextEn     String?  // Text for ticker tape (English)
+  tickerTextAr     String?  // Text for ticker tape (Arabic)
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("services_page_settings")
+}
+
+// Services (for Services Page)
+model Service {
+  id            String      @id @default(uuid())
+  type          String      @default("card") // 'image' or 'card'
+  count         Int         // Sequential number (01, 02, 03, etc.) - only for cards
+  titleEn       String
+  titleAr       String
+  descriptionEn String?     @db.Text
+  descriptionAr String?     @db.Text
+  imageUrl      String
+  order         Int         @default(0)
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  tags          ServiceTag[]
+
+  @@map("services")
+}
+
+// Service Tags
+model ServiceTag {
+  id          String   @id @default(uuid())
+  serviceId   String
+  service     Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  textEn      String
+  textAr      String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("service_tags")
+}
+
+// Products
+model Product {
+  id                    String                 @id @default(uuid())
+  titleEn               String
+  titleAr               String
+  descriptionEn         String?                @db.Text
+  descriptionAr         String?                @db.Text
+  imageUrl              String // First image (for products listing page)
+  imageUrls             String[] // Array of all product images
+  price                 Decimal                @db.Decimal(10, 2)
+  oldPrice              Decimal?               @db.Decimal(10, 2) // For discount display
+  availability          Int? // Number of pieces available
+  warranty              String? // Warranty period (e.g., "12 شهر")
+  detailedDescriptionEn String?                @db.Text // Rich text HTML content
+  detailedDescriptionAr String?                @db.Text // Rich text HTML content
+  mediaUrl              String? // Video or image URL for media section
+  mediaType             String? // 'video' or 'image'
+  similarProductIds     String[] // Array of similar product IDs
+  productTypeId         String?
+  productType           ProductType?           @relation(fields: [productTypeId], references: [id], onDelete: SetNull)
+  brandLogoId           String?
+  brandLogo             BrandLogo?             @relation(fields: [brandLogoId], references: [id], onDelete: SetNull)
+  colorId               String?
+  color                 Color?                 @relation(fields: [colorId], references: [id], onDelete: SetNull)
+  countryId             String?
+  country               Country?               @relation(fields: [countryId], references: [id], onDelete: SetNull)
+  yearId                String?
+  year                  Year?                  @relation(fields: [yearId], references: [id], onDelete: SetNull)
+  technicalSpecs        ProductTechnicalSpec[]
+  order                 Int                    @default(0)
+  isActive              Boolean                @default(true)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+
+  @@map("products")
+}
+
+// Product Technical Specifications (Dynamic key-value pairs)
+model ProductTechnicalSpec {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  titleEn   String
+  titleAr   String
+  valueEn   String
+  valueAr   String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("product_technical_specs")
+}
+
+// Product Types (Filter Option)
+model ProductType {
+  id        String    @id @default(uuid())
+  nameEn    String
+  nameAr    String
+  order     Int       @default(0)
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+
+  @@map("product_types")
+}
+
+// Brands (Filter Option) - DEPRECATED: Use BrandLogo from BrandsSection instead
+model Brand {
+  id        String   @id @default(uuid())
+  name      String // Simple name for dropdown (not shown in UI)
+  nameEn    String
+  nameAr    String
+  logoUrl   String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("brands")
+}
+
+// Colors (Filter Option)
+model Color {
+  id        String    @id @default(uuid())
+  nameEn    String
+  nameAr    String
+  hexCode   String? // For color display
+  order     Int       @default(0)
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+
+  @@map("colors")
+}
+
+// Countries (Filter Option)
+model Country {
+  id        String    @id @default(uuid())
+  nameEn    String
+  nameAr    String
+  order     Int       @default(0)
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+
+  @@map("countries")
+}
+
+// Years (Filter Option)
+model Year {
+  id        String    @id @default(uuid())
+  year      Int       @unique
+  order     Int       @default(0)
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+
+  @@map("years")
+}
