@@ -25,19 +25,20 @@ model User {
 
 // Hero Section
 model HeroSection {
-  id            String      @id @default(uuid())
-  isActive      Boolean     @default(true)
-  titleEn       String
-  titleAr       String
-  descriptionEn String      @db.Text
-  descriptionAr String      @db.Text
-  buttonTextEn  String
-  buttonTextAr  String
-  buttonLink    String?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  mediaItems    HeroMedia[]
-  stats         HeroStat[]
+  id                String      @id @default(uuid())
+  isActive          Boolean     @default(true)
+  titleEn           String
+  titleAr           String
+  descriptionEn     String      @db.Text
+  descriptionAr     String      @db.Text
+  buttonTextEn      String
+  buttonTextAr      String
+  buttonLink        String?
+  autoPlayInterval  Int         @default(5000) // Time in milliseconds between image switches
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  mediaItems        HeroMedia[]
+  stats             HeroStat[]
 
   @@map("hero_sections")
 }
@@ -67,6 +68,9 @@ model HeroStat {
   labelAr       String
   descriptionEn String
   descriptionAr String
+  link          String?     // Optional link for navigation
+  buttonTextEn  String?      // Optional button text in English
+  buttonTextAr  String?      // Optional button text in Arabic
   order         Int         @default(0)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
@@ -301,14 +305,19 @@ model StartProjectSection {
 
 // Theme Settings
 model ThemeSettings {
-  id           String   @id @default(uuid())
-  colorBrand   String   @default("#3daae1")
-  colorAccent  String   @default("#22c55e")
-  fontFamily   String   @default("Inter")
-  fontFamilyAr String   @default("Tajawal")
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              String   @id @default(uuid())
+  colorBrand      String   @default("#3daae1")
+  colorBrandDark  String   @default("#1c90ce")
+  colorAccent     String   @default("#22c55e")
+  colorDestructive String  @default("#ef4444")
+  colorWarning    String   @default("#f59e0b")
+  colorInfo       String   @default("#3b82f6")
+  colorRing       String   @default("#3daae1")
+  fontFamily      String   @default("Inter")
+  fontFamilyAr    String   @default("Tajawal")
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@map("theme_settings")
 }
@@ -632,4 +641,32 @@ model Year {
   products  Product[]
 
   @@map("years")
+}
+
+// Navbar Settings
+model NavbarSettings {
+  id        String       @id @default(uuid())
+  logoUrl   String
+  isActive  Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  links     NavbarLink[]
+
+  @@map("navbar_settings")
+}
+
+// Navbar Links
+model NavbarLink {
+  id                String          @id @default(uuid())
+  navbarSettingsId  String?
+  navbarSettings    NavbarSettings? @relation(fields: [navbarSettingsId], references: [id], onDelete: SetNull)
+  textEn            String
+  textAr            String
+  link              String
+  order             Int             @default(0)
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@map("navbar_links")
 }

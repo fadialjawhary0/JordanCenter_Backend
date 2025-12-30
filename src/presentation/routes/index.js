@@ -19,6 +19,8 @@ import productTypeRoutes from './productType.routes.js';
 import servicesPageRoutes from './servicesPage.routes.js';
 import serviceRoutes from './service.routes.js';
 import projectsPageRoutes from './projectsPage.routes.js';
+import navbarRoutes from './navbar.routes.js';
+import themeRoutes from './theme.routes.js';
 
 const router = express.Router();
 
@@ -43,6 +45,8 @@ router.use('/terms-and-conditions-page', termsAndConditionsPageRoutes);
 router.use('/faq-page', faqPageRoutes);
 router.use('/request-types', requestTypeRoutes);
 router.use('/contact-requests', contactRequestRoutes);
+router.use('/navbar', navbarRoutes);
+router.use('/theme', themeRoutes);
 
 // Example route
 router.get('/', (req, res) => {
