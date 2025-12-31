@@ -78,6 +78,20 @@ model HeroStat {
   @@map("hero_stats")
 }
 
+// Categories Section Settings
+model CategoriesSectionSettings {
+  id              String   @id @default(uuid())
+  sectionTitleEn  String   @default("Product Categories")
+  sectionTitleAr  String   @default("فئات المنتجات")
+  sectionSubtitleEn String? @default("Explore More")
+  sectionSubtitleAr String? @default("استكشف المزيد")
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("categories_section_settings")
+}
+
 // Categories Section
 model Category {
   id           String   @id @default(uuid())
@@ -96,12 +110,14 @@ model Category {
 
 // Solutions Section Settings
 model SolutionsSectionSettings {
-  id             String   @id @default(uuid())
-  sectionTitleEn String   @default("Solutions that fit your needs")
-  sectionTitleAr String   @default("حلول تناسب احتياجاتك")
-  isActive       Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id              String   @id @default(uuid())
+  sectionTitleEn  String   @default("Solutions that fit your needs")
+  sectionTitleAr  String   @default("حلول تناسب احتياجاتك")
+  sectionSubtitleEn String?
+  sectionSubtitleAr String?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@map("solutions_section_settings")
 }
@@ -130,6 +146,8 @@ model ProjectsSectionSettings {
   id              String    @id @default(uuid())
   sectionTitleEn  String    @default("Our proud projects")
   sectionTitleAr  String    @default("مشاريعنا الفخورة")
+  sectionSubtitleEn String?
+  sectionSubtitleAr String?
   buttonTextEn    String    @default("View project details")
   buttonTextAr    String    @default("عرض تفاصيل المشروع")
   ctaButtonTextEn String    @default("View more projects")
@@ -179,12 +197,14 @@ model ProjectLogo {
 
 // Articles Section Settings
 model ArticlesSectionSettings {
-  id             String   @id @default(uuid())
-  sectionTitleEn String   @default("Learn to make better decisions")
-  sectionTitleAr String   @default("تعلم اتخاذ قرارات أفضل")
-  isActive       Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id              String   @id @default(uuid())
+  sectionTitleEn  String   @default("Learn to make better decisions")
+  sectionTitleAr  String   @default("تعلم اتخاذ قرارات أفضل")
+  sectionSubtitleEn String?
+  sectionSubtitleAr String?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@map("articles_section_settings")
 }
@@ -207,13 +227,15 @@ model Article {
 
 // Brands Section Settings
 model BrandsSectionSettings {
-  id             String      @id @default(uuid())
-  sectionTitleEn String      @default("The best global brands")
-  sectionTitleAr String      @default("أفضل العلامات التجارية العالمية")
-  isActive       Boolean     @default(true)
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  logos          BrandLogo[]
+  id              String      @id @default(uuid())
+  sectionTitleEn  String      @default("The best global brands")
+  sectionTitleAr  String      @default("أفضل العلامات التجارية العالمية")
+  sectionSubtitleEn String?
+  sectionSubtitleAr String?
+  isActive        Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  logos           BrandLogo[]
 
   @@map("brands_section_settings")
 }
@@ -237,17 +259,19 @@ model BrandLogo {
 
 // Customer Testimonials
 model Testimonial {
-  id             String               @id @default(uuid())
-  sectionTitleEn String               @default("Customer trust comes first")
-  sectionTitleAr String               @default("ثقة العملاء أولاً")
-  textEn         String               @db.Text
-  textAr         String               @db.Text
-  imageUrl       String
-  order          Int                  @default(0)
-  isActive       Boolean              @default(true)
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
-  profiles       TestimonialProfile[]
+  id              String               @id @default(uuid())
+  sectionTitleEn  String               @default("Customer trust comes first")
+  sectionTitleAr  String               @default("ثقة العملاء أولاً")
+  sectionSubtitleEn String?
+  sectionSubtitleAr String?
+  textEn          String               @db.Text
+  textAr          String               @db.Text
+  imageUrl        String
+  order           Int                  @default(0)
+  isActive        Boolean              @default(true)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  profiles        TestimonialProfile[]
 
   @@map("testimonials")
 }
@@ -669,4 +693,67 @@ model NavbarLink {
   updatedAt         DateTime        @updatedAt
 
   @@map("navbar_links")
+}
+
+// Footer Settings
+model FooterSettings {
+  id                    String       @id @default(uuid())
+  column1TitleEn         String       @default("Quick Links")
+  column1TitleAr         String       @default("روابط سريعة")
+  column2TitleEn         String       @default("Categories")
+  column2TitleAr         String       @default("الفئات")
+  column3TitleEn         String       @default("Our Services")
+  column3TitleAr         String       @default("خدماتنا")
+  column4TitleEn         String       @default("More")
+  column4TitleAr         String       @default("المزيد")
+  followUsTitleEn       String       @default("Follow Us On")
+  followUsTitleAr       String       @default("تابعنا على")
+  newsletterTitleEn     String       @default("Subscribe to Newsletter")
+  newsletterTitleAr     String       @default("اشترك في النشرة الإخبارية")
+  newsletterEmailPlaceholderEn String @default("Email")
+  newsletterEmailPlaceholderAr String @default("البريد الإلكتروني")
+  newsletterButtonTextEn String     @default("Send")
+  newsletterButtonTextAr String     @default("إرسال")
+  copyrightTextEn       String       @default("© 2024 Central Jordan. All rights reserved.")
+  copyrightTextAr       String       @default("© 2024 Central Jordan. جميع الحقوق محفوظة.")
+  isActive              Boolean      @default(true)
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  links                 FooterLink[]
+  socialMedia           SocialMedia[]
+
+  @@map("footer_settings")
+}
+
+// Footer Links (for each column)
+model FooterLink {
+  id                String          @id @default(uuid())
+  footerSettingsId  String?
+  footerSettings    FooterSettings? @relation(fields: [footerSettingsId], references: [id], onDelete: Cascade)
+  column            Int             // 1, 2, 3, or 4 (which column this link belongs to)
+  textEn            String
+  textAr            String
+  link              String
+  order             Int             @default(0)
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@map("footer_links")
+}
+
+// Social Media Links
+model SocialMedia {
+  id                String          @id @default(uuid())
+  footerSettingsId  String?
+  footerSettings    FooterSettings? @relation(fields: [footerSettingsId], references: [id], onDelete: Cascade)
+  name              String          // 'LinkedIn', 'Facebook', 'Instagram', 'YouTube', 'Snapchat', etc.
+  url               String
+  iconType          String          // 'Linkedin', 'Facebook', 'Instagram', 'Youtube', 'Snapchat', etc.
+  order             Int             @default(0)
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@map("social_media")
 }

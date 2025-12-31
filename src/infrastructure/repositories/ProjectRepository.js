@@ -105,9 +105,20 @@ export class ProjectRepository extends IProjectRepository {
   }
 
   async updateSectionSettings(id, data) {
+    const updateData = {};
+    if (data.sectionTitleEn !== undefined) updateData.sectionTitleEn = data.sectionTitleEn;
+    if (data.sectionTitleAr !== undefined) updateData.sectionTitleAr = data.sectionTitleAr;
+    if (data.sectionSubtitleEn !== undefined) updateData.sectionSubtitleEn = data.sectionSubtitleEn || null;
+    if (data.sectionSubtitleAr !== undefined) updateData.sectionSubtitleAr = data.sectionSubtitleAr || null;
+    if (data.buttonTextEn !== undefined) updateData.buttonTextEn = data.buttonTextEn;
+    if (data.buttonTextAr !== undefined) updateData.buttonTextAr = data.buttonTextAr;
+    if (data.ctaButtonTextEn !== undefined) updateData.ctaButtonTextEn = data.ctaButtonTextEn;
+    if (data.ctaButtonTextAr !== undefined) updateData.ctaButtonTextAr = data.ctaButtonTextAr;
+    if (data.ctaButtonLink !== undefined) updateData.ctaButtonLink = data.ctaButtonLink || null;
+
     return await prisma.projectsSectionSettings.update({
       where: { id },
-      data,
+      data: updateData,
       include: {
         projects: {
           include: {

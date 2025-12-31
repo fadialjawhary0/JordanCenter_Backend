@@ -51,6 +51,8 @@ export class TestimonialController {
         isActive: req.body.isActive === 'true' || req.body.isActive === true,
         sectionTitleEn: req.body.sectionTitleEn || 'Customer trust comes first',
         sectionTitleAr: req.body.sectionTitleAr || 'ثقة العملاء أولاً',
+        sectionSubtitleEn: req.body.sectionSubtitleEn || null,
+        sectionSubtitleAr: req.body.sectionSubtitleAr || null,
       };
       
       const testimonial = await this.testimonialService.createTestimonial(testimonialData);
@@ -73,6 +75,8 @@ export class TestimonialController {
       if (req.body.textAr !== undefined) updateData.textAr = req.body.textAr;
       if (req.body.sectionTitleEn !== undefined) updateData.sectionTitleEn = req.body.sectionTitleEn;
       if (req.body.sectionTitleAr !== undefined) updateData.sectionTitleAr = req.body.sectionTitleAr;
+      if (req.body.sectionSubtitleEn !== undefined) updateData.sectionSubtitleEn = req.body.sectionSubtitleEn || null;
+      if (req.body.sectionSubtitleAr !== undefined) updateData.sectionSubtitleAr = req.body.sectionSubtitleAr || null;
       if (req.body.order !== undefined) updateData.order = parseInt(req.body.order);
       if (req.body.isActive !== undefined) {
         updateData.isActive = req.body.isActive === 'true' || req.body.isActive === true;

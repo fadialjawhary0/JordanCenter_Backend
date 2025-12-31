@@ -13,6 +13,10 @@ const brandsSectionController = new BrandsSectionController(brandsSectionService
 
 // Public routes
 router.get('/active', brandsSectionController.getActive);
+router.get('/settings', brandsSectionController.getSectionSettings);
+
+// Section Settings routes (must be before /:id routes to avoid route conflicts)
+router.put('/settings', brandsSectionController.updateSectionSettings);
 
 // CMS routes (should be protected with authentication in production)
 router.get('/:id', brandsSectionController.getById);

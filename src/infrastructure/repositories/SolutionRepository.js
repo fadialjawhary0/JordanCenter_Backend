@@ -66,15 +66,24 @@ export class SolutionRepository extends ISolutionRepository {
       where: { isActive: true },
     });
 
+    const updateData = {};
+    if (data.sectionTitleEn !== undefined) updateData.sectionTitleEn = data.sectionTitleEn;
+    if (data.sectionTitleAr !== undefined) updateData.sectionTitleAr = data.sectionTitleAr;
+    if (data.sectionSubtitleEn !== undefined) updateData.sectionSubtitleEn = data.sectionSubtitleEn || null;
+    if (data.sectionSubtitleAr !== undefined) updateData.sectionSubtitleAr = data.sectionSubtitleAr || null;
+
     if (settings) {
       return await prisma.solutionsSectionSettings.update({
         where: { id: settings.id },
-        data,
+        data: updateData,
       });
     } else {
       return await prisma.solutionsSectionSettings.create({
         data: {
-          ...data,
+          sectionTitleEn: data.sectionTitleEn || 'Solutions that fit your needs',
+          sectionTitleAr: data.sectionTitleAr || 'حلول تناسب احتياجاتك',
+          sectionSubtitleEn: data.sectionSubtitleEn || null,
+          sectionSubtitleAr: data.sectionSubtitleAr || null,
           isActive: true,
         },
       });

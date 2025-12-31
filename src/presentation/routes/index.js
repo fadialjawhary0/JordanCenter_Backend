@@ -21,6 +21,8 @@ import serviceRoutes from './service.routes.js';
 import projectsPageRoutes from './projectsPage.routes.js';
 import navbarRoutes from './navbar.routes.js';
 import themeRoutes from './theme.routes.js';
+import footerRoutes from './footer.routes.js';
+import categoriesSectionRoutes from './categoriesSection.routes.js';
 
 const router = express.Router();
 
@@ -47,6 +49,8 @@ router.use('/request-types', requestTypeRoutes);
 router.use('/contact-requests', contactRequestRoutes);
 router.use('/navbar', navbarRoutes);
 router.use('/theme', themeRoutes);
+router.use('/footer', footerRoutes);
+router.use('/categories-section', categoriesSectionRoutes);
 
 // Example route
 router.get('/', (req, res) => {

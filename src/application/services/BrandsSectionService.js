@@ -50,6 +50,14 @@ export class BrandsSectionService {
   async deleteLogo(logoId) {
     return await this.brandsSectionRepository.deleteLogo(logoId);
   }
+
+  async getSectionSettings() {
+    return await this.brandsSectionRepository.getSectionSettings();
+  }
+
+  async updateSectionSettings(data) {
+    return await this.brandsSectionRepository.updateSectionSettings(data);
+  }
 }
 
 export default BrandsSectionService;

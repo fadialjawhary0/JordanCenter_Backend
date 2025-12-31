@@ -66,15 +66,24 @@ export class ArticleRepository extends IArticleRepository {
       where: { isActive: true },
     });
 
+    const updateData = {};
+    if (data.sectionTitleEn !== undefined) updateData.sectionTitleEn = data.sectionTitleEn;
+    if (data.sectionTitleAr !== undefined) updateData.sectionTitleAr = data.sectionTitleAr;
+    if (data.sectionSubtitleEn !== undefined) updateData.sectionSubtitleEn = data.sectionSubtitleEn || null;
+    if (data.sectionSubtitleAr !== undefined) updateData.sectionSubtitleAr = data.sectionSubtitleAr || null;
+
     if (settings) {
       return await prisma.articlesSectionSettings.update({
         where: { id: settings.id },
-        data,
+        data: updateData,
       });
     } else {
       return await prisma.articlesSectionSettings.create({
         data: {
-          ...data,
+          sectionTitleEn: data.sectionTitleEn || 'Learn to make better decisions',
+          sectionTitleAr: data.sectionTitleAr || 'تعلم اتخاذ قرارات أفضل',
+          sectionSubtitleEn: data.sectionSubtitleEn || null,
+          sectionSubtitleAr: data.sectionSubtitleAr || null,
           isActive: true,
         },
       });

@@ -34,4 +34,12 @@ export class IBrandsSectionRepository {
   async deleteLogo(logoId) {
     throw new Error('Method not implemented');
   }
+
+  async getSectionSettings() {
+    throw new Error('Method not implemented');
+  }
+
+  async updateSectionSettings(data) {
+    throw new Error('Method not implemented');
+  }
 }
